@@ -1,0 +1,665 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    width: 100%;
+    
+}
+
+#first-section {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    transform: translate(-50%, 100%); 
+    top: 50%;
+    left: 50%;
+    transition: top 1s, transform 1s;
+    /* Center it initially */
+    opacity: 0.9;
+    z-index: 2;
+}
+#first-section.active{
+
+    top: 0%; /* Adjusted to make room for cards */
+    transform: translate(-50%, 0);
+}
+
+
+
+#background-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%; 
+    min-height: 100%;
+    z-index: -1;
+    opacity: 0.7; /* Adjust this value for transparency effect */
+    
+}
+
+#background-video2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the video covers the entire section */
+    z-index: -1; /* Places the video behind other elements */
+}
+#logo {
+    font-size: 2em;
+    margin-bottom: 0px;
+    color: #e0e0e0;
+}
+#logo img {
+    width: 150px;  /* Adjust the width as needed */
+    height: auto;  /* Maintains the aspect ratio */
+}
+#search-bar {
+    padding: 10px;
+    font-size: 1em;
+}
+
+#search-button {
+    padding: 10px;
+    font-size: 1em;
+}
+#search-button2 {
+    padding: 10px;
+    font-size: 1em;
+}
+
+#second-section {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 200px);
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    z-index: 1;
+}
+
+.card {
+    flex: 1;
+    margin: 0 10px; /* Add space between the cards */
+    background-color: #e0e0e0;
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    align-items: center;
+    justify-content: center;
+    height: 85%; /* Make the card take up 80% of the height of the second section */
+    padding: 10px; /* Add padding inside the card */
+    margin-top: 10px;
+    border-radius: 15px; /* Rounded edges */
+    box-sizing: border-box; /* Ensure padding and border are included in the width */
+}
+
+.card h3, .card p {
+    
+    overflow: hidden; /* Hide overflowed content */
+    text-overflow: ellipsis; /* Add ellipsis (...) for overflowed text */
+    
+    text-align: center; /* Center-align the heading */
+}
+
+.card p {
+    margin: 5px 0;
+    text-align: center; /* Center-align the text inside the card */
+    
+    overflow-y: auto; /* Allow scrolling if text overflows */
+    word-wrap: break-word; /* Break long words to prevent overflow */
+}
+
+#middle-card {
+    background-color: #d0d0ff;
+}
+
+#right-card {
+    background-color: #ffd0d0;
+}
+
+/* Animation for first section sliding out */
+#first-section.slide-up {
+    transform: translate(-50%, 0); /* Move to final position */
+    top: 3%; /* Adjust as necessary */
+}
+
+#suggestions-box {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    max-height: 150px;
+    width: 220px;
+    overflow-y: auto;
+    
+    z-index: 1000;
+}
+
+.suggestion-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Dim the background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: #d0d0ff; /* Set the background color of the card */
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 80%;
+    max-height: 80%;
+    overflow-y: auto;
+    position: relative; /* Needed for the close button to position correctly */
+}
+
+.popup-header {
+    margin-bottom: 10px;
+    text-align: center;
+    
+}
+
+.popup-body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.popup-body table {
+    width: 100%;
+    border-collapse: collapse; /* Remove space between cells */
+    margin-bottom: 20px; /* Add some space below the table */
+}
+
+.popup-body th, 
+.popup-body td {
+    border: 1px solid #ddd; /* Light border around cells */
+    padding: 8px; /* Space inside each cell */
+    text-align: left; /* Align text to the left */
+}
+
+.popup-body th {
+    background-color: #4CAF50; /* Header background color */
+    color: white; /* Header text color */
+    font-weight: bold; /* Bold header text */
+}
+
+.popup-body tr:nth-child(even) {
+    background-color: #f2f2f2; /* Even row background color */
+}
+
+.popup-body tr:hover {
+    background-color: #ddd; /* Highlight row on hover */
+}
+
+.popup-body td {
+    color: #333; /* Darker text color */
+}
+
+.popup-body table {
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow around the table */
+    border-radius: 5px; /* Rounded corners for the table */
+    overflow: hidden; /* Ensure rounded corners apply */
+}
+
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px; /* Increase the size of the close button */
+    color: red; /* Set the color of the close button */
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.button {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding inside the button */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Slightly larger font size */
+    font-weight: bold; /* Bold text */
+    text-transform: uppercase; /* Uppercase text */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition effects */
+    margin: 5px;
+}
+
+.button:hover {
+    background-color: #45a049; /* Slightly darker green on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+.button:active {
+    background-color: #3e8e41; /* Even darker green when clicked */
+    transform: translateY(0); /* Return to normal position on click */
+    box-shadow: 0 5px #666; /* Slight shadow when clicked */
+}
+
+.button:focus {
+    outline: none; /* Remove outline on focus */
+}
+
+
+/* CSS for the full-screen pop-up */
+#pie-chart-popup {
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    z-index: 1000;
+    overflow: auto;
+    padding: 20px;
+    
+}
+
+#pie-chart-popup .popup-content2 {
+    position: relative;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 100%;
+    max-height: 90%;
+    margin: auto;
+    overflow-y: auto;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+h3.prot_feat{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    height: 600px;
+    
+}
+
+.chart-legend {
+    margin-left: 20px;
+}
+
+.bottom-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.label-container {
+    flex: 1;
+}
+
+.button-container {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+#top-features-select {
+    width: 60px;
+    margin-left: 10px;
+    padding: 5px;
+}
+
+
+#top-features-select2 {
+    width: 60px;
+    margin-left: 10px;
+    padding: 5px;
+}
+
+.button-container .button {
+    margin-left: 10px;
+}
+
+#xgb_pie{
+    height: 40px;
+}
+
+#rf_pie{
+    height:40px;
+}
+/*
+.label-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+}*/
+
+.popup-content2 {
+    background-color: #d0d0ff; /* Card background color */
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%; /* Adjust width as needed */
+     /* Adjust height as needed */
+    display: flex;
+    flex-direction: column; /* Display chart and legend side by side */
+    overflow: auto; /* Add scrollbars if necessary */
+}
+
+
+#pie-chart-popup .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff4c4c;
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+/*
+#pie-chart-popup canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+*/
+
+
+.chart-legend {
+    width: 30%; /* Adjust width for the legend */
+    height: 100%;
+    overflow: auto; /* Add scrollbars if necessary */
+    padding-left: 20px;
+    box-sizing: border-box;
+}
+
+
+.popup-content {
+    position: relative;
+    top: -100%; /* Start off-screen */
+    opacity: 0;
+    transition: all 0.5s ease; /* Adjust the speed as needed */
+}
+
+/* When the pop-up is active (visible) */
+.popup-content.active {
+    top: 0; /* Slide to original position */
+    opacity: 1; /* Fade in */
+}
+
+/* When closing the pop-up */
+.popup-content.closing {
+    top: 100%; /* Slide out of view */
+    opacity: 0; /* Fade out */
+}
+
+.popup-content2 {
+    position: relative;
+    top: -100%; /* Start off-screen */
+    opacity: 0;
+    transition: all 0.5s ease; /* Adjust the speed as needed */
+}
+
+/* When the pop-up is active (visible) */
+.popup-content2.active {
+    top: 0; /* Slide to original position */
+    opacity: 1; /* Fade in */
+}
+
+/* When closing the pop-up */
+.popup-content2.closing {
+    top: 100%; /* Slide out of view */
+    opacity: 0; /* Fade out */
+}
+
+.card h3 {
+    font-size: 24px;
+    
+    color: #333; /* Darker color for the title */
+}
+.card h4{
+    font-size: 24px;
+}
+.card p {
+    font-size: 16px;
+    line-height: 1.6; /* Improves readability */
+    color: #555; /* Softer color for the text */
+    text-align: justify; /* Align text to both left and right edges */
+    padding: 10px; /* Adds some padding around the text */
+    background-color: #f9f9f9; /* Light background color */
+    border-radius: 8px; /* Rounded corners for the background */
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+#features-popup {
+    display: None;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#features-popup.active{
+    display: flex;
+}
+.popup-content3 {
+    background: white;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 800px;
+    padding: 20px;
+    position: relative;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    height: 80vh; /* To prevent overflowing the viewport */
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.close-btn:hover {
+    background: #c0392b;
+}
+
+#features-content {
+    height: 71vh;
+    margin-bottom: 20px;
+}
+
+#features-content p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: black;
+}
+
+/* Pagination Styles */
+#pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#pagination button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#pagination button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+#pagination button:hover:not(:disabled) {
+    background-color: #2980b9;
+}
+
+#page-info {
+    font-size: 16px;
+    color: #333;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    padding: 10px;
+}
+
+.feature-item {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#third-section {
+    position: relative;
+    display: flex;
+    height: calc(150vh - 100vh);
+    width: 100%;
+    margin-top: 20px;
+}
+
+#left-third-section {
+    width: 32.5%;
+    padding: 10px;
+    background-color: black;
+}
+#left-third-section {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
+    
+    text-align: center;
+    overflow-y: auto;
+}
+
+#left-third-section h3 {
+    font-weight: bold; /* Bold header text */
+    font-size: x-large;
+    color: white;
+    text-transform: uppercase;
+    margin: 0; /* Remove default margin */
+    margin-bottom: 10px;
+    overflow: hidden; /* Hide overflowed content */
+    text-overflow: ellipsis;
+}
+
+#left-third-section h6 {
+    font-weight: bold; /* Bold header text */
+    font-size: medium;
+    color: white;
+    padding: 10px;
+    margin: 0; /* Remove default margin */
+    margin-bottom: 10px;
+    overflow: hidden; /* Hide overflowed content */
+    text-overflow: ellipsis;
+}
+
+#vertical-line {
+    width: 4px;
+    background-color: black;
+    margin: 0 0px; /* Space between the sections and the line */
+    height: 100%; /* Make the line full height */
+    border-right: 4px dashed white; /* Disconnected line style */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#left-third-section p {
+    font-weight: bold; /* Bold text */
+    font-size: 72px;
+    color: white;
+    margin-top: 10px; /* Remove default margin */
+    overflow: hidden; /* Hide overflowed content */
+    text-overflow: ellipsis;
+}
+#right-third-section {
+    width: 67.5%;
+    padding: 10px;
+    background-color: black;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
+    overflow-y:auto;
+    text-align: center;
+}
+
+#right-third-section p {
+    font-weight: bold; /* Bold text */
+    font-size: 24px;
+    color: white;
+    margin-top: 10px; /* Remove default margin */
+    padding: 10px;
+    overflow: hidden; /* Hide overflowed content */
+    text-overflow: ellipsis; /* Add ellipsis (...) for overflowed text */
+}
+
+#right-third-section h3 {
+    font-weight: bold; /* Bold header text */
+    font-size: 48px;
+    color: white;
+    text-transform: uppercase;
+    margin: 0; /* Remove default margin */
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+
+
+
