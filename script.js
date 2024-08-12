@@ -39,6 +39,7 @@ function displayProteinDetails(data,drugyData) {
         piebutton = `<button id = "view-pie-info-btn" class = "button" onclick="showPiePopup()">View Pie Chart</button>`;
         featbutton = `<button id="features-btn" class = "button" onclick="details()" >View Protein Features</button>`;
         dibutton = `<button id="show-third-section" class = "button" onclick="di()">Show Druggability Index</button>`;
+        pmidbutton = `<button id="pmid" class = "button" onclick="pmid_show()">Show PMIDs</button>`;
         const drugTable = createDrugTable(drugyData);
         detailsDiv.innerHTML = `
             <div class="card">
@@ -54,6 +55,7 @@ function displayProteinDetails(data,drugyData) {
                 ${piebutton}
                 ${featbutton}
                 ${dibutton}
+                ${pmidbutton}
             </div>
             <div class="card">
                 <h4>Function</h3>
@@ -108,7 +110,90 @@ function animatePercentage(element, targetValue, duration) {
     update(); // Start the animation
 }
 
+function pmid_show(){
+    const uniprotId = document.getElementById('search-bar').value;
 
+    
+
+
+    fetch('/get_pmid', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ uniprot_id: uniprotId , source: "pubmed"})
+    })
+    .then(response => response.json())
+    .then(data => {
+
+
+        const popup = document.createElement('div');
+        popup.id = 'pie-chart-popup';
+        popup.innerHTML = `
+            <div id="pmid-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button" onclick="closeModal()">&times;</span>
+                    <h2>PubMed IDs</h2>
+                    <table id="pmid-table" border="1">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>PubMed ID</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pmid-table-body">
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(popup);
+        const pmidTableBody = document.getElementById('pmid-table-body');
+        pmidTableBody.innerHTML = ''; // Clear any previous PMIDs
+
+        // Display PMIDs in the list
+        if (data.pmids && data.pmids.length > 0) {
+            // Populate the table with PubMed IDs
+            data.pmids.forEach((pmid, index) => {
+                const row = document.createElement('tr');
+                const cellIndex = document.createElement('td');
+                const cellPmid = document.createElement('td');
+
+                cellIndex.textContent = index + 1;
+                cellPmid.textContent = pmid;
+
+                row.appendChild(cellIndex);
+                row.appendChild(cellPmid);
+                pmidTableBody.appendChild(row);
+            });
+
+            // Show the modal
+            document.getElementById('pmid-modal').style.display = 'block';
+        } else {
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.colSpan = 2;
+            cell.textContent = 'No PMIDs found.';
+            row.appendChild(cell);
+            pmidTableBody.appendChild(row);
+        }
+    
+        // Show the modal
+        document.getElementById('pmid-modal').style.display = 'block';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+
+}
+
+function closeModal() {
+    const modal = document.getElementById('pie-chart-popup');
+    if (modal) {
+        modal.parentNode.removeChild(modal);
+    }
+}
 function di() {
     const thirdSection2 = document.getElementById('third-section');
     if (thirdSection2) {
