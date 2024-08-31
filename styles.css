@@ -4,6 +4,7 @@ body, html {
     position: relative;
     width: 100%;
     
+    /* Background color */
 }
 
 #first-section {
@@ -15,6 +16,7 @@ body, html {
     align-items: center;
     justify-content: center;
     background-color: black;
+   
     transform: translate(-50%, 100%); 
     top: 50%;
     left: 50%;
@@ -22,6 +24,7 @@ body, html {
     /* Center it initially */
     opacity: 0.9;
     z-index: 2;
+    margin-top:50px;
 }
 #first-section.active{
 
@@ -130,17 +133,47 @@ body, html {
     flex: 1;
     margin: 0 10px; /* Add space between the cards */
     background-color: #e0e0e0;
+    
     display: flex;
     flex-direction: column; /* Stack children vertically */
     align-items: center;
     justify-content: center;
-    height: 85%; /* Make the card take up 80% of the height of the second section */
+    height: 91%; /* Make the card take up 80% of the height of the second section */
     padding: 10px; /* Add padding inside the card */
     margin-top: 10px;
     border-radius: 15px; /* Rounded edges */
     box-sizing: border-box; /* Ensure padding and border are included in the width */
 }
 
+.b1{
+    width:90%;
+    margin-bottom: 2%;
+    margin-left: 2px;
+    margin-right: 2px;
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9; /* Light background color */
+    border-radius: 8px; /* Rounded corners for the background */
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1); 
+    height: 30%;
+}
+
+.b2{
+    width:90%;
+    margin-bottom: 2%;
+    margin-left: 2px;
+    margin-right: 2px;
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9; /* Light background color */
+    border-radius: 8px; /* Rounded corners for the background */
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1); 
+    height: 25%;
+}
 .card h3, .card p {
     
     overflow: hidden; /* Hide overflowed content */
@@ -301,7 +334,9 @@ body, html {
     overflow: hidden; /* Ensure rounded corners apply */
 }
 
-
+html {
+    scroll-behavior: smooth; /* Enables smooth scrolling */
+}
 .close {
     position: absolute;
     top: 10px;
@@ -310,8 +345,47 @@ body, html {
     color: red; /* Set the color of the close button */
     cursor: pointer;
     font-weight: bold;
+    z-index: 10;
+}
+#about {
+    background-color: #dcd1d1; /* Background color */
+    padding: 50px 20px; /* Adds some space around the content */
+    text-align: center; /* Centers the text inside this div */
 }
 
+/* Styling for the About heading */
+.about-heading {
+    font-size: 32px; /* Size of the heading text */
+    margin-bottom: 20px; /* Space below the heading */
+    color: #333; /* Color of the heading text */
+}
+
+/* Styling for the About image */
+.about-image {
+    max-width: 100%; /* Makes sure the image is responsive */
+    height: auto; /* Maintains the aspect ratio */
+    margin-bottom: 20px; /* Adds space below the image */
+}
+
+#team {
+    background-color: #e1bdbd; /* Background color */
+    padding: 50px 20px; /* Adds some space around the content */
+    text-align: center; /* Centers the text inside this div */
+}
+
+/* Styling for the About heading */
+.team-heading {
+    font-size: 32px; /* Size of the heading text */
+    margin-bottom: 20px; /* Space below the heading */
+    color: #333; /* Color of the heading text */
+}
+
+/* Styling for the About image */
+.team-image {
+    max-width: 100%; /* Makes sure the image is responsive */
+    height: auto; /* Maintains the aspect ratio */
+    margin-bottom: 20px; /* Adds space below the image */
+}
 .button {
     background-color: #4CAF50; /* Green background */
     color: white; /* White text */
@@ -685,6 +759,46 @@ h3.prot_feat{
     text-overflow: ellipsis;
 }
 
+#fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 50px;
+    width: 100%;
+    background-color: black; /* Semi-transparent background */
+    opacity: 0.9;
+    color: #333; /* Text color */
+    
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    z-index: 1000; /* Ensure header is above other content */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#about-link {
+    margin-right: 20px; /* Adds space on the right of the link */
+    color: white; /* Text color */
+    text-decoration: none; /* Removes underline */
+    font-size: 24px;
+}
+
+/* Hover effect for the 'About' link */
+#about-link:hover {
+    color: #007BFF; /* Change color on hover */
+}
+
+#header-button {
+    display: flex;
+    align-items: center;
+    text-decoration: none; /* Removes underline from the link */
+}
+
+#header-button-image {
+    height: 40px; /* Adjust the size of the image as needed */
+    cursor: pointer; /* Changes cursor to pointer on hover */
+}
+
 #vertical-line {
     width: 4px;
     background-color: black;
@@ -723,7 +837,7 @@ h3.prot_feat{
     color: white;
     margin-top: 10px; /* Remove default margin */
     padding: 10px;
-    overflow: hidden; /* Hide overflowed content */
+    overflow-y: auto; /* Hide overflowed content */
     text-overflow: ellipsis; /* Add ellipsis (...) for overflowed text */
 }
 
@@ -735,6 +849,59 @@ h3.prot_feat{
     margin: 0; /* Remove default margin */
     margin-bottom: 10px;
     padding: 10px;
+}
+
+.b1 p{
+    
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1);
+    
+    text-overflow: ellipsis; /* Add ellipsis (...) for overflowed text */
+    
+    text-align: center; /* Center-align the heading */
+    text-align: center; /* Center-align the text inside the card */
+    
+    overflow-y: auto; /* Allow scrolling if text overflows */
+    word-wrap: break-word; /* Break long words to prevent overflow */
+}
+
+.b2 p{
+    
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1);
+    
+    text-overflow: ellipsis; /* Add ellipsis (...) for overflowed text */
+    
+    text-align: center; /* Center-align the heading */
+    text-align: center; /* Center-align the text inside the card */
+    
+    overflow-y: auto; /* Allow scrolling if text overflows */
+    word-wrap: break-word; /* Break long words to prevent overflow */
+}
+
+
+#viewer {
+    position: relative;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 100%;
+    max-height: 90%;
+    margin: auto;
+    
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+#viewer{
+   
+        background-color: #d0d0ff; /* Card background color */
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%; /* Adjust width as needed */
+         /* Adjust height as needed */
+        min-height: 80%;
+        
+        
+    
+    
 }
 
 

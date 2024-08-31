@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import requests
 import random
 import json
@@ -6,9 +6,11 @@ from bs4 import BeautifulSoup as bs
 import pandas as pd
 import psycopg2
 import xml.etree.ElementTree as ET
+import os
 
 app = Flask(__name__)
-
+PDB_DIR = 'pdb_files'
+os.makedirs(PDB_DIR, exist_ok=True)
 conn = psycopg2.connect(
     dbname="my_proteins_db",
     user="postgres",
@@ -25,6 +27,37 @@ UNIPROT_API_URL = "https://www.ebi.ac.uk/proteins/api/proteins/"
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/fetch_pdb', methods=['POST'])
+def fetch_and_display_structure():
+    data = request.json
+    uniprot_id = data.get('uniprot_id')
+
+    if not uniprot_id:
+        return jsonify({"error": "UniProt ID is required"}), 400
+
+    # URL to download the PDB file from AlphaFold
+    url = f"https://alphafold.ebi.ac.uk/files/AF-{uniprot_id}-F1-model_v4.pdb"
+    
+    # Fetch the PDB file
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        pdb_filename = f"{uniprot_id}.pdb"
+        pdb_path = os.path.join(PDB_DIR, pdb_filename)
+        
+        # Save the PDB file locally
+        with open(pdb_path, "wb") as pdb_file:
+            pdb_file.write(response.content)
+        
+        # Return the filename for the frontend to request
+        return jsonify({"pdb_filename": pdb_filename})
+    else:
+        return jsonify({"error": "Failed to fetch PDB file"}), 500
+
+@app.route('/pdb/<filename>')
+def get_pdb_file(filename):
+    return send_from_directory(PDB_DIR, filename)
 
 @app.route('/get_pmid', methods=['POST'])
 def get_protein_info():

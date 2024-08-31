@@ -40,26 +40,45 @@ function displayProteinDetails(data,drugyData) {
         featbutton = `<button id="features-btn" class = "button" onclick="details()" >View Protein Features</button>`;
         dibutton = `<button id="show-third-section" class = "button" onclick="di()">Show Druggability Index</button>`;
         pmidbutton = `<button id="pmid" class = "button" onclick="pmid_show()">Show PMIDs</button>`;
+        visbutton = `<button id="visb" class = "button" onclick="vis_show()">3D Structure</button>`;
         const drugTable = createDrugTable(drugyData);
         detailsDiv.innerHTML = `
             <div class="card">
-                <h3>3D Structure</h3>
                 
-                <!-- Structure rendering will be handled later -->
+                
+                
+                <div class = "b1">
+                <p class = "p2"> Users can click here to know the names and further details abut each of the 183 features used in training our models</p>
+                ${featbutton}
+                </div>
+                <div class = "b1">
+                <p> All the features have been used for predicting the druggability index, in doing so, some features have been shown to be of more importance in terms of their contribution. Here, we show the contribution of each of the protein-features.</p>
+                ${piebutton}
+                </div>
+                <div class = "b1">
+                <p class = "p2"> Users can view the PubMedIDs, if available related to the protein</p>
+                ${pmidbutton}
+                </div>
+                <!-- Structure rendering will be handled later 
                 <div id="msp-container" style="width: 100%; height: 400px;"></div>
+                -->
             </div>
             <div class="card">
                 <h3>Protein: ${data.name}</h3>
-                
+                <p> This website aims at providing all the necessary information about a protein. One can view the required details by clicking the relevant buttons. We've deveoped AI models to predict the druggability of a protein. i.e - the probability of a drug to be approved druggable. The two models developed are based on XGBoost (XGB) and Random Fores(RF) and have been trained on 183 features for the entire protein database.</p>
                 ${buttonHTML}
-                ${piebutton}
-                ${featbutton}
+                
+                
                 ${dibutton}
-                ${pmidbutton}
+                
             </div>
             <div class="card">
                 <h4>Function</h3>
                 <p>${data.function || "Function not available"}</p>
+                <div class = "b2">
+                <p> Click here to view the 3-D alpha-fold structure of the protein</p>
+                ${visbutton}
+                </div>
             </div>
         `;
         
@@ -108,6 +127,62 @@ function animatePercentage(element, targetValue, duration) {
     }
 
     update(); // Start the animation
+}
+
+function vis_show(){
+    const uniprotId = document.getElementById('search-bar').value;
+    if (!uniprotId) {
+        alert("Please enter a UniProt ID.");
+        return;
+    }
+
+    // Post request to fetch the PDB file
+    fetch('/fetch_pdb', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uniprot_id: uniprotId })
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        const popup = document.createElement('div');
+        popup.id = 'pie-chart-popup';
+        popup.innerHTML = `
+            
+            <div id="viewer">
+            <button class="close" onclick="closePieChartPopup()">&times;</button>  
+            </div>
+        `;
+        document.body.appendChild(popup);
+
+
+
+        if (data.pdb_filename) {
+            // Construct the URL to fetch the PDB file from Flask server
+            const pdbUrl = `/pdb/${data.pdb_filename}`;
+
+            // Initialize the viewer
+            const viewer = $3Dmol.createViewer("viewer", { backgroundColor: "transparent" });
+
+            // Fetch the PDB file from the Flask server
+            fetch(pdbUrl)
+                .then(response => response.text())
+                .then(pdbData => {
+                    // Add the PDB model to the viewer
+                    viewer.addModel(pdbData, "pdb");
+                    // Set the visualization style
+                    viewer.setStyle({}, { cartoon: { color: 'spectrum' } });
+                    // Zoom into the structure
+                    viewer.zoomTo();
+                    // Render the structure
+                    viewer.render();
+                })
+                .catch(error => console.error('Error fetching the PDB file:', error));
+        } else {
+            alert('Failed to fetch PDB file.');
+        }
+    })
+    .catch(error => console.error('Error fetching PDB file:', error));
 }
 
 function pmid_show(){
@@ -196,6 +271,14 @@ function closeModal() {
 }
 function di() {
     const thirdSection2 = document.getElementById('third-section');
+    const about2 = document.getElementById('about');
+    const team2 = document.getElementById('team');
+    if(about2){
+        about2.remove();
+    }
+    if(team2){
+        team2.remove();
+    }
     if (thirdSection2) {
         thirdSection2.remove(); // This will remove the element from the DOM
     }
@@ -221,7 +304,20 @@ function di() {
                 <button id="rf-button" class = "button" onclick = "dirf()" >DI USING RF</button>
             </div>
         </div>`;
-
+    const about = document.createElement('div');
+    about.id = 'about';
+    about.innerHTML = 
+    `
+    <h2 class="about-heading">About</h2>
+    <img src="/static/about.png" alt="About Image" class="about-image">
+    `;
+    const team = document.createElement('div');
+    team.id = 'team';
+    team.innerHTML=
+    `
+    <h2 class="about-heading">Team</h2>
+    <img src="/static/team.png" alt="About Image" class="about-image">
+    `;
     
     fetch('/get_mean_probability', {
         method: 'POST',
@@ -246,13 +342,24 @@ function di() {
     .catch(error => {
         console.error('Error:', error);
     });
+    
     document.body.appendChild(thirdSection)
+    document.body.appendChild(about)
+    document.body.appendChild(team);
 };
 
 function dirf() {
     const thirdSection2 = document.getElementById('third-section');
+    const about2 = document.getElementById('about');
+    const team2 = document.getElementById('team');
     if (thirdSection2) {
         thirdSection2.remove(); // This will remove the element from the DOM
+    }
+    if(about2){
+        about2.remove();
+    }
+    if(team2){
+        team2.remove();
     }
     const uniprotId = document.getElementById('search-bar').value;
     console.log("Yo");
@@ -276,7 +383,22 @@ function dirf() {
                 <button id="rf-button" class = "button" onclick = "dirf()">DI USING RF</button>
             </div>
         </div>`;
-
+        const about = document.createElement('div');
+        about.id = 'about';
+        about.innerHTML = 
+        `
+        
+        <h2 class="about-heading">About</h2>
+        <img src="/static/about.png" alt="About Image" class="about-image">
+    
+        `;
+        const team = document.createElement('div');
+        team.id = 'team';
+        team.innerHTML=
+        `
+        <h2 class="about-heading">Team</h2>
+        <img src="/static/team.png" alt="About Image" class="about-image">
+        `;
     
     fetch('/get_mean_probability_2', {
         method: 'POST',
@@ -303,6 +425,8 @@ function dirf() {
         console.error('Error:', error);
     });
     document.body.appendChild(thirdSection)
+    document.body.appendChild(about)
+    document.body.appendChild(team);
 };
 
 
@@ -700,7 +824,7 @@ function render3DStructure(pdbUrl) {
     });
 
     viewer.addModelFromURI(pdbUrl, "pdb", function() {
-        viewer.setStyle({}, {cartoon: {color: 'spectrum'}});
+        viewer.setStyle({}, {cartoon: {color: 'red'}});
         viewer.zoomTo();
         viewer.render();
     });
