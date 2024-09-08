@@ -6,30 +6,34 @@ body, html {
     
     /* Background color */
 }
-
+#data{
+    margin-top: 150px;
+    width: 100%;
+    
+}
 #first-section {
     position: relative;
     width: 100%;
-    height: 200px;
+    height: 1300px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: black;
+    background-color: transparent;
    
-    transform: translate(-50%, 100%); 
+    transform: translate(-50%, 0%); 
     top: 50%;
     left: 50%;
     transition: top 1s, transform 1s;
     /* Center it initially */
     opacity: 0.9;
     z-index: 2;
-    margin-top:50px;
+    
 }
 #first-section.active{
 
     top: 0%; /* Adjusted to make room for cards */
-    transform: translate(-50%, 0);
+    transform: translate(-50%, 0%);
 }
 
 
@@ -38,21 +42,36 @@ body, html {
     position: fixed;
     right: 0;
     bottom: 0;
-    min-width: 100%; 
-    min-height: 100%;
-    z-index: -1;
-    opacity: 0.7; /* Adjust this value for transparency effect */
-    
-}
-
-#background-video2 {
-    position: absolute;
-    top: 0;
-    left: 0;
+     
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures the video covers the entire section */
-    z-index: -1; /* Places the video behind other elements */
+    object-fit: cover;
+    
+    
+    
+    z-index: -1;
+    opacity: 1; /* Adjust this value for transparency effect */
+    
+}
+#about-video {
+    width: 100vw; /* Make it span the full width of the about section */
+    height: auto; /* Maintain the aspect ratio */
+    
+    display: block; /* Ensure the video behaves as a block element */
+    object-fit: cover;
+}
+#imgeee{
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+#background-video2 {
+    width: 100vw; /* Make it span the full width of the about section */
+    height: auto; /* Maintain the aspect ratio */
+    
+    display: block; /* Ensure the video behaves as a block element */
+    object-fit: cover;
 }
 
 /* Modal styling */
@@ -91,17 +110,26 @@ body, html {
     text-decoration: none;
     cursor: pointer;
 }
-
-
+/*
 #logo {
     font-size: 2em;
     margin-bottom: 0px;
     color: #e0e0e0;
 }
+*/
 #logo img {
-    width: 150px;  /* Adjust the width as needed */
+    width: 1200px;  /* Adjust the width as needed */
     height: auto;  /* Maintains the aspect ratio */
 }
+.search-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    margin: 20px auto; /* Centers the search bar */
+    position: relative;
+}
+
 #search-bar {
     padding: 10px;
     font-size: 1em;
@@ -111,6 +139,20 @@ body, html {
     padding: 10px;
     font-size: 1em;
 }
+
+.search-input {
+    width: 100%;
+    padding: 12px 50px 12px 20px;
+    border-radius: 50px; /* Makes the input fully rounded */
+    border: none;
+    outline: none;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+}
+
+.search-input::placeholder {
+    color: #bbb; /* Placeholder text color */
+}
 #search-button2 {
     padding: 10px;
     font-size: 1em;
@@ -119,7 +161,7 @@ body, html {
 #second-section {
     position: relative;
     width: 100%;
-    height: calc(100vh - 200px);
+    height: 0px;
     bottom: 0;
     display: flex;
     justify-content: center;
@@ -128,7 +170,9 @@ body, html {
     transition: opacity 0.5s ease-in-out;
     z-index: 1;
 }
-
+#second-section.active{
+    height: 750px;
+}
 .card {
     flex: 1;
     margin: 0 10px; /* Add space between the cards */
@@ -139,6 +183,7 @@ body, html {
     align-items: center;
     justify-content: center;
     height: 91%; /* Make the card take up 80% of the height of the second section */
+    
     padding: 10px; /* Add padding inside the card */
     margin-top: 10px;
     border-radius: 15px; /* Rounded edges */
@@ -206,13 +251,24 @@ body, html {
 
 #suggestions-box {
     position: absolute;
+    top: 105%;
     background-color: white;
-    border: 1px solid #ccc;
+    
     max-height: 150px;
-    width: 220px;
-    overflow-y: auto;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-y: scroll; /* Enable scrolling */
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
     
     z-index: 1000;
+}
+#suggestions-box::-webkit-scrollbar {
+    display: none;
+}
+#suggestions-box.active {
+    display: block; /* Add this class with JS to show the box when needed */
 }
 
 .suggestion-item {
@@ -349,7 +405,7 @@ html {
 }
 #about {
     background-color: #dcd1d1; /* Background color */
-    padding: 50px 20px; /* Adds some space around the content */
+     /* Adds some space around the content */
     text-align: center; /* Centers the text inside this div */
 }
 
@@ -369,7 +425,7 @@ html {
 
 #team {
     background-color: #e1bdbd; /* Background color */
-    padding: 50px 20px; /* Adds some space around the content */
+    
     text-align: center; /* Centers the text inside this div */
 }
 
@@ -386,6 +442,19 @@ html {
     height: auto; /* Maintains the aspect ratio */
     margin-bottom: 20px; /* Adds space below the image */
 }
+
+#contus {
+    background-color: black; /* Background color */
+    padding: 50px 20px; /* Adds some space around the content */
+    text-align: center; /* Centers the text inside this div */
+}
+
+/* Styling for the About heading */
+#contus h2 {
+    font-size: 32px; /* Size of the heading text */
+    margin-bottom: 20px; /* Space below the heading */
+    color: white; /* Color of the heading text */
+}
 .button {
     background-color: #4CAF50; /* Green background */
     color: white; /* White text */
@@ -398,6 +467,7 @@ html {
     text-transform: uppercase; /* Uppercase text */
     transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition effects */
     margin: 5px;
+    
 }
 
 .button:hover {
@@ -719,7 +789,7 @@ h3.prot_feat{
     display: flex;
     height: calc(150vh - 100vh);
     width: 100%;
-    margin-top: 20px;
+    
 }
 
 #left-third-section {
@@ -904,6 +974,133 @@ h3.prot_feat{
     
 }
 
+.search-btn {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.search-btn svg {
+    color: #333; /* Icon color */
+    width: 24px;
+    height: 24px;
+}
+
+.search-btn:focus {
+    outline: none;
+}
 
 
+#typedtext{
+    color: white;
+    font-weight: bold;
+    font-size: large;
+}
+
+#firpie {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 50px;
+}
+
+#firpie p {
+    margin-left: 50px;
+    margin-right: 50px;
+    color: white;
+    font-weight: bold;
+    font-size: large;
+    margin-bottom: 20px; /* Add spacing between the paragraph and the button */
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    background-image: url("secback.svg");
+    height: 0px; /* Optional: makes the container take full viewport height */
+    
+}
+#container.active{
+    height: 750px;
+}
+
+#top-div, #bottom-div {
+    width: 100%;
+    display: flex;
+    height: 100px; /* Adjust height as needed */
+    background-color: transparent; /* Optional for visualizing the layout */
+    text-align: center;
+    justify-content: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#top-div h1{
+    color: white;
+    font-weight: bolder;
+}
+
+#middle-container {
+    display: flex;
+    flex-grow: 1; /* Allows it to grow and fill space between top and bottom */
+}
+
+#left-div, #right-div {
+    width: 50%;
+    height: 550px; /* Same height for both divs */
+    background-color: transparent; /* Optional for visualization */
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+#left-div{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+}
+#left-top{
+    height: 385px;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#left-bottom{
+    height: 165px;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#left-top h2{
+    color: white;
+    font-weight: bolder;
+    padding: 10px;
+    overflow-y:hidden;
+}
+#left-top p{
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    overflow-y: auto;
+}
+#right-div{
+    position: relative;
+}
+
+/* Optional styling for the bottom div */
+#bottom-div {
+    background-color: transparent; /* Optional for visualization */
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
 

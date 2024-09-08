@@ -3,7 +3,8 @@ async function searchProtein() {
     const uniprotId = document.getElementById('search-bar').value;
     const response = await fetch(`/api/protein/${uniprotId}`);
     const drugy = await fetch(`/api/drugs/${uniprotId}`);
-    
+    const sec = document.getElementById('second-section');
+    const upd2 = document.getElementById('container');
     const proteinData = await response.json();
     const drugydata = await drugy.json();
 
@@ -15,6 +16,13 @@ async function searchProtein() {
         //     displayProteinDetails(proteinData);
         // }, 500); // Match the delay with the slide-up animation duration
         displayProteinDetails(proteinData,drugydata)
+        upd2.classList.add('active');
+        
+        setTimeout(() =>{
+            upd2.scrollIntoView({
+                behavior: 'smooth'
+            });
+        },1000);
         
     }
 }
@@ -26,7 +34,7 @@ function displayProteinDetails(data,drugyData) {
     }
     const header = document.getElementById('first-section');
     const detailsDiv = document.getElementById('second-section');
-    
+    const upd = document.getElementById('container');
     // Trigger the slide-up animation
     header.classList.add('active');
     
@@ -42,6 +50,95 @@ function displayProteinDetails(data,drugyData) {
         pmidbutton = `<button id="pmid" class = "button" onclick="pmid_show()">Show PMIDs</button>`;
         visbutton = `<button id="visb" class = "button" onclick="vis_show()">3D Structure</button>`;
         const drugTable = createDrugTable(drugyData);
+        upd.innerHTML = `
+        
+        <div id="top-div">
+            <!-- Content for the top div spanning 100% width -->
+            <h1>Protein: ${data.name}</h1>
+        </div>
+        
+        <div id="middle-container">
+            <div id="left-div">
+                <div id="left-top">
+                    <h2>Protein function</h2>
+                    <p>${data.function || "Function not available"}</p>
+                </div>
+                <div id="left-bottom">
+
+                    ${featbutton}
+                    ${pmidbutton}
+                    
+                </div>
+            </div>
+            <div id="right-div">
+                <!-- 3D structure -->
+                Right Div
+            </div>
+        </div>
+        
+        <div id="bottom-div">
+        ${buttonHTML}
+                
+                
+        ${dibutton}
+        </div>
+        
+        `
+
+        const uniprotId = document.getElementById('search-bar').value;
+    if (!uniprotId) {
+        alert("Please enter a UniProt ID.");
+        return;
+    }
+
+    // Post request to fetch the PDB file
+    fetch('/fetch_pdb', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uniprot_id: uniprotId })
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        //const popup2 = document.getElementById('right-div');
+        //popup2.innerHTML = '';
+        //popup.innerHTML = `
+            
+        //    <div id="viewer">
+             
+        //    </div>
+        //`;
+        //document.body.appendChild(popup);
+
+
+
+        if (data.pdb_filename) {
+            // Construct the URL to fetch the PDB file from Flask server
+            const pdbUrl = `/pdb/${data.pdb_filename}`;
+
+            // Initialize the viewer
+            const viewer = $3Dmol.createViewer("right-div", { backgroundColor: "transparent" });
+
+            // Fetch the PDB file from the Flask server
+            fetch(pdbUrl)
+                .then(response => response.text())
+                .then(pdbData => {
+                    // Add the PDB model to the viewer
+                    viewer.addModel(pdbData, "pdb");
+                    // Set the visualization style
+                    viewer.setStyle({}, { cartoon: { color: 'spectrum' } });
+                    // Zoom into the structure
+                    viewer.zoomTo();
+                    // Render the structure
+                    viewer.render();
+                })
+                .catch(error => console.error('Error fetching the PDB file:', error));
+        } else {
+            alert('Failed to fetch PDB file.');
+        }
+    })
+    .catch(error => console.error('Error fetching PDB file:', error));
+
         detailsDiv.innerHTML = `
             <div class="card">
                 
@@ -96,6 +193,20 @@ function displayProteinDetails(data,drugyData) {
     }, 1000); // Match the delay with the slide-up animation duration
 }
 
+document.getElementById('search-bar').addEventListener('focus', function() {
+    document.getElementById('suggestions-box').classList.add('active');
+});
+
+document.addEventListener('click', function(event) {
+    const searchBar = document.getElementById('search-bar');
+    const suggestionsBox = document.getElementById('suggestions-box');
+
+    // Check if the click happened outside the search bar and suggestions box
+    if (!searchBar.contains(event.target) && !suggestionsBox.contains(event.target)) {
+        suggestionsBox.classList.remove('active');
+    }
+});
+
 function generateRandomColor() {
     // Generate a random color in hex format
     const r = Math.floor(Math.random() * 256);
@@ -145,15 +256,15 @@ function vis_show(){
     .then(response => response.json())
     .then(data => {
 
-        const popup = document.createElement('div');
-        popup.id = 'pie-chart-popup';
-        popup.innerHTML = `
+        const popup2 = document.getElementById('right-div');
+        popup2.innerHTML = '';
+        //popup.innerHTML = `
             
-            <div id="viewer">
-            <button class="close" onclick="closePieChartPopup()">&times;</button>  
-            </div>
-        `;
-        document.body.appendChild(popup);
+        //    <div id="viewer">
+             
+        //    </div>
+        //`;
+        //document.body.appendChild(popup);
 
 
 
@@ -162,7 +273,7 @@ function vis_show(){
             const pdbUrl = `/pdb/${data.pdb_filename}`;
 
             // Initialize the viewer
-            const viewer = $3Dmol.createViewer("viewer", { backgroundColor: "transparent" });
+            const viewer = $3Dmol.createViewer("right-div", { backgroundColor: "white" });
 
             // Fetch the PDB file from the Flask server
             fetch(pdbUrl)
@@ -262,6 +373,22 @@ function pmid_show(){
 
 
 }
+document.addEventListener("DOMContentLoaded", function() {
+    const text = "DrugProtAI is an advanced tool designed to predict the druggability of proteins by leveraging machine learning techniques. It utilizes features extracted from protein data to evaluate and predict the potential of a protein to be targeted by drugs.";
+    let index = 0;
+    const speed = 50; // Typing speed in milliseconds
+    const typingText = document.getElementById("typing-text");
+
+    function typeWriter() {
+        if (index < text.length) {
+            typingText.innerHTML += text.charAt(index);
+            index++;
+            setTimeout(typeWriter, speed);
+        }
+    }
+
+    typeWriter();
+});
 
 function closeModal() {
     const modal = document.getElementById('pie-chart-popup');
@@ -273,11 +400,15 @@ function di() {
     const thirdSection2 = document.getElementById('third-section');
     const about2 = document.getElementById('about');
     const team2 = document.getElementById('team');
+    const contus2 = document.getElementById('contus');
     if(about2){
         about2.remove();
     }
     if(team2){
         team2.remove();
+    }
+    if(contus2){
+        contus2.remove();
     }
     if (thirdSection2) {
         thirdSection2.remove(); // This will remove the element from the DOM
@@ -308,17 +439,24 @@ function di() {
     about.id = 'about';
     about.innerHTML = 
     `
-    <h2 class="about-heading">About</h2>
-    <img src="/static/about.png" alt="About Image" class="about-image">
+    <video autoplay muted loop id="background-video2">
+            <source src="static/abouty.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
     `;
     const team = document.createElement('div');
     team.id = 'team';
     team.innerHTML=
     `
-    <h2 class="about-heading">Team</h2>
-    <img src="/static/team.png" alt="About Image" class="about-image">
-    `;
     
+    <img src="/static/tea.svg" alt="About Image" id = "imgeee">
+    `;
+    const contus = document.createElement('div');
+    contus.id = 'contus';
+    contus.innerHTML=
+    `
+    <h2 class="about-heading">Contact Us</h2>
+    `;
     fetch('/get_mean_probability', {
         method: 'POST',
         headers: {
@@ -343,15 +481,18 @@ function di() {
         console.error('Error:', error);
     });
     
-    document.body.appendChild(thirdSection)
-    document.body.appendChild(about)
+    document.body.appendChild(thirdSection);
+    document.body.appendChild(about);
     document.body.appendChild(team);
+    document.body.appendChild(contus);
+
 };
 
 function dirf() {
     const thirdSection2 = document.getElementById('third-section');
     const about2 = document.getElementById('about');
     const team2 = document.getElementById('team');
+    const contus2 = document.getElementById('contus');
     if (thirdSection2) {
         thirdSection2.remove(); // This will remove the element from the DOM
     }
@@ -360,6 +501,9 @@ function dirf() {
     }
     if(team2){
         team2.remove();
+    }
+    if(contus2){
+        contus2.remove();
     }
     const uniprotId = document.getElementById('search-bar').value;
     console.log("Yo");
@@ -388,18 +532,26 @@ function dirf() {
         about.innerHTML = 
         `
         
-        <h2 class="about-heading">About</h2>
-        <img src="/static/about.png" alt="About Image" class="about-image">
+        <video autoplay muted loop id="background-video2">
+            <source src="static/abouty.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
     
         `;
         const team = document.createElement('div');
         team.id = 'team';
         team.innerHTML=
         `
-        <h2 class="about-heading">Team</h2>
-        <img src="/static/team.png" alt="About Image" class="about-image">
+        
+        <img src="/static/tea.svg" alt="About Image" id = "imgeee">
+        
         `;
-    
+        const contus = document.createElement('div');
+        contus.id = 'contus';
+        contus.innerHTML=
+        `
+        <h2 class="about-heading">Contact Us</h2>
+        `;
     fetch('/get_mean_probability_2', {
         method: 'POST',
         headers: {
@@ -424,9 +576,10 @@ function dirf() {
     .catch(error => {
         console.error('Error:', error);
     });
-    document.body.appendChild(thirdSection)
-    document.body.appendChild(about)
+    document.body.appendChild(thirdSection);
+    document.body.appendChild(about);
     document.body.appendChild(team);
+    document.body.appendChild(contus);
 };
 
 
@@ -976,6 +1129,18 @@ function details() {
 
 
 
+var i = 0;
+var txt = 'Lorem ipsum typing effect!'; /* The text */
+var speed = 50; /* The speed/duration of the effect in milliseconds */
+
+function typeWriter() {
+  if (i < txt.length) {
+    document.getElementById("demo").innerHTML += txt.charAt(i);
+    i++;
+    setTimeout(typeWriter, speed);
+  }
+}
+
 
 function endit(){
     const popup = document.getElementById('pie-chart-popup');
@@ -985,3 +1150,40 @@ function endit(){
     
 };
 
+var aText = new Array(
+    "DrugProtAI is an advanced tool designed to predict the druggability of proteins by leveraging machine learning techniques. ", 
+    "It utilizes features extracted from protein data to evaluate and predict the potential of a protein to be targeted by drugs."
+    );
+    var iSpeed = 30; // time delay of print out
+    var iIndex = 0; // start printing array at this posision
+    var iArrLength = aText[0].length; // the length of the text array
+    var iScrollAt = 20; // start scrolling up at this many lines
+     
+    var iTextPos = 0; // initialise text position
+    var sContents = ''; // initialise contents variable
+    var iRow; // initialise current row
+     
+    function typewriter()
+    {
+     sContents =  ' ';
+     iRow = Math.max(0, iIndex-iScrollAt);
+     var destination = document.getElementById("typedtext");
+     
+     while ( iRow < iIndex ) {
+      sContents += aText[iRow++] + '<br />';
+     }
+     destination.innerHTML = sContents + aText[iIndex].substring(0, iTextPos) + "_";
+     if ( iTextPos++ == iArrLength ) {
+      iTextPos = 0;
+      iIndex++;
+      if ( iIndex != aText.length ) {
+       iArrLength = aText[iIndex].length;
+       setTimeout("typewriter()", 500);
+      }
+     } else {
+      setTimeout("typewriter()", iSpeed);
+     }
+    }
+    
+    
+    typewriter();
